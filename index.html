@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#10183A">
+<title>Dziewięć pierwszych piątków</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E9ECF7; --surface:#FFFFFF; --surface-2:#F3F4FB; --ink:#1A1F3D; --muted:#5A6185;
+  --crimson:#B3172F; --crimson-ink:#FFFFFF; --gold:#B8851C; --gold-soft:#F6E6BC;
+  --line:#D5D9EC; --ok:#1F8A5F;
+  --window:#10183A; --lead:#0A1030; --halo:#F0C350;
+  --display:"Fraunces", Georgia, "Times New Roman", serif;
+  --body:"Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme: light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0E1531; --surface:#18214A; --surface-2:#1F2A5A; --ink:#F4EEDD; --muted:#A9B0D3;
+    --crimson:#D93652; --crimson-ink:#FFFFFF; --gold:#F0C350; --gold-soft:#3A3524;
+    --line:#2C3770; --ok:#4CC08F; --window:#0A1030; --lead:#050A22;
+    color-scheme: dark;
+  }
+}
+*,*::before,*::after{box-sizing:inherit}
+html,body{height:100%;margin:0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.15;margin:0}
+.wrap{max-width:480px;margin:0 auto;padding:16px 20px 40px}
+.screen{display:none}
+.screen.on{display:block}
+.hidden{display:none!important}
+
+/* ---------- okładka ---------- */
+#cover{background:var(--window);color:#F4EEDD;min-height:100%}
+#cover .wrap{display:flex;flex-direction:column;align-items:center;text-align:center;min-height:100vh;min-height:100dvh;padding-top:28px}
+#cover h1{font-size:2.3rem;letter-spacing:-.01em;margin-top:18px}
+#cover h1 .num{display:block;font-size:5.2rem;line-height:1;color:var(--halo)}
+#cover .lede{color:#C9CDE6;max-width:30ch;margin:12px 0 0}
+#cover .cover-window{width:min(78vw,320px);margin-top:8px}
+.promise{font-family:var(--display);font-weight:500;font-size:1.06rem;line-height:1.6;background:rgba(255,255,255,.06);border:1px solid rgba(240,195,80,.35);border-radius:18px;padding:18px 18px 14px;margin:22px 0 0;text-align:left}
+.promise cite{display:block;font-family:var(--body);font-style:normal;font-size:.85rem;color:#C9CDE6;margin-top:10px}
+.cover-form{width:100%;margin-top:24px;text-align:left}
+.cover-form label{display:block;font-weight:700;margin-bottom:6px}
+.cover-form input{width:100%;font:inherit;font-size:1.1rem;padding:14px 16px;border-radius:14px;border:2px solid rgba(240,195,80,.45);background:rgba(255,255,255,.08);color:#fff}
+.cover-form input::placeholder{color:#8F96BD}
+
+/* ---------- przyciski ---------- */
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:0;border-radius:16px;padding:16px 20px;font-weight:800;font-size:1.08rem;margin-top:14px}
+.btn-primary{background:var(--crimson);color:var(--crimson-ink);box-shadow:0 4px 0 #6E0B1C}
+.btn-primary:active{transform:translateY(3px);box-shadow:0 1px 0 #6E0B1C}
+.btn-primary:disabled{opacity:.45;box-shadow:none;cursor:not-allowed}
+.btn-gold{background:var(--halo);color:#1A1F3D;box-shadow:0 4px 0 #9A6F12}
+.btn-gold:active{transform:translateY(3px);box-shadow:0 1px 0 #9A6F12}
+.btn-plain{background:var(--surface-2);color:var(--ink);border:1px solid var(--line)}
+.btn-danger{background:transparent;color:var(--crimson);border:2px solid var(--crimson)}
+.linkish{background:none;border:0;color:var(--gold);font-weight:700;text-decoration:underline;text-underline-offset:3px;padding:8px 0}
+.icon-btn{background:var(--surface);border:1px solid var(--line);border-radius:12px;width:44px;height:44px;display:grid;place-items:center}
+
+/* ---------- ekran główny ---------- */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}
+.topbar h2{font-size:1.5rem}
+.window-stage{position:relative;background:radial-gradient(circle at 50% 45%, #1C2A66 0%, var(--window) 62%);border-radius:28px;padding:18px 18px 16px;margin-top:10px;text-align:center;color:#F4EEDD;overflow:hidden}
+.window-stage svg{width:100%;max-width:340px;display:block;margin:0 auto}
+.progress-text{font-family:var(--display);font-size:1.25rem;margin-top:8px}
+.progress-text b{color:var(--halo);font-size:1.8rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:18px;margin-top:16px}
+.card h3{font-size:1.2rem}
+.next-date{font-family:var(--display);font-size:1.45rem;font-weight:700;margin:4px 0 2px;text-transform:none}
+.countdown{color:var(--muted);font-weight:600}
+.countdown.today{color:var(--crimson);font-weight:800}
+.checks{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:10px}
+.check{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--surface-2);border:2px solid var(--line);border-radius:16px;padding:12px 14px}
+.check .box{flex:0 0 34px;height:34px;border-radius:50%;border:2px solid var(--muted);display:grid;place-items:center;transition:background .2s,border-color .2s}
+.check .box svg{opacity:0;transform:scale(.5);transition:opacity .2s,transform .2s}
+.check[aria-pressed="true"]{border-color:var(--ok)}
+.check[aria-pressed="true"] .box{background:var(--ok);border-color:var(--ok)}
+.check[aria-pressed="true"] .box svg{opacity:1;transform:scale(1)}
+.check .t{font-weight:800;display:block}
+.check .s{font-size:.88rem;color:var(--muted);display:block}
+.hint{font-size:.9rem;color:var(--muted);margin:10px 0 0}
+.banner{border-radius:18px;padding:14px 16px;margin-top:16px;background:var(--gold-soft);border:1px solid var(--gold)}
+.banner p{margin:0}
+.log{list-style:none;margin:10px 0 0;padding:0}
+.log li{display:flex;gap:14px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.log li:first-child{border-top:0}
+.log .badge{flex:0 0 36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#fff;font-family:var(--display)}
+.log .d{font-weight:700;display:block}
+.log .p{font-size:.88rem;color:var(--muted);display:block}
+.empty{color:var(--muted);margin:8px 0 0}
+
+/* ---------- witraż ---------- */
+.petal{transition:fill .6s ease}
+.petal-glass{fill:rgba(255,255,255,.07)}
+.petal-num{font-family:var(--body);font-weight:800;font-size:9px;fill:#8C93BF}
+.lit .petal-num{fill:#fff}
+.just-lit .petal{animation:litup 1.6s ease both}
+@keyframes litup{0%{filter:brightness(3) drop-shadow(0 0 0 #fff)}40%{filter:brightness(2.2) drop-shadow(0 0 10px #FFE7A3)}100%{filter:none}}
+.core-heart{transition:fill-opacity .8s ease}
+.complete .flames{animation:flick 1.4s ease-in-out infinite alternate;transform-origin:0 -14px}
+@keyframes flick{from{transform:scaleY(.92)}to{transform:scaleY(1.08)}}
+@media (prefers-reduced-motion: reduce){.just-lit .petal,.complete .flames{animation:none}}
+
+/* ---------- nakładki ---------- */
+.overlay{position:fixed;inset:0;z-index:50;display:none}
+.overlay.on{display:block}
+#scanner{background:#000}
+#scanner video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.scan-frame{position:absolute;left:50%;top:44%;width:min(70vw,300px);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:28px;box-shadow:0 0 0 200vmax rgba(10,16,48,.62);border:4px solid var(--halo)}
+.scan-top{position:absolute;left:0;right:0;top:0;padding:calc(env(safe-area-inset-top,0px) + 18px) 20px 0;color:#fff;text-align:center}
+.scan-top h3{font-size:1.3rem}
+.scan-top p{margin:6px 0 0;color:#D6DAF0}
+.scan-bottom{position:absolute;left:0;right:0;bottom:0;padding:0 20px calc(env(safe-area-inset-bottom,0px) + 22px);max-width:480px;margin:0 auto}
+.modal-bg{position:fixed;inset:0;z-index:60;background:rgba(6,10,30,.62);display:none;align-items:flex-end;justify-content:center;padding:16px}
+.modal-bg.on{display:flex}
+.modal{background:var(--surface);color:var(--ink);border-radius:26px;padding:22px 20px 18px;width:100%;max-width:460px;margin-bottom:env(safe-area-inset-bottom,0px);max-height:88vh;overflow:auto}
+.modal h3{font-size:1.35rem}
+.modal p{margin:10px 0 0}
+.modal .art{display:block;width:120px;margin:0 auto 6px}
+
+/* ---------- ustawienia / ksiądz ---------- */
+.list{list-style:none;padding:0;margin:8px 0 0}
+.list li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.list li:first-child{border-top:0}
+.field{margin-top:14px}
+.field label{display:block;font-weight:700;margin-bottom:6px}
+.field input,.field textarea{width:100%;font:inherit;padding:12px 14px;border-radius:12px;border:2px solid var(--line);background:var(--surface-2);color:var(--ink)}
+.field textarea{min-height:110px;font-size:.8rem;font-family:ui-monospace,monospace}
+.switch{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.switch input{width:52px;height:30px;accent-color:var(--crimson)}
+.qr-sheet{background:#fff;color:#111;border-radius:20px;padding:20px;margin-top:16px;text-align:center}
+.qr-sheet svg{width:100%;max-width:300px;height:auto}
+.qr-sheet h3{font-family:var(--display);font-size:1.3rem}
+.qr-sheet p{margin:6px 0 0;color:#333}
+.testflag{background:var(--crimson);color:#fff;text-align:center;font-weight:800;font-size:.85rem;padding:6px;border-radius:10px;margin-bottom:8px}
+
+@media print{
+  body{background:#fff}
+  body *{visibility:hidden}
+  .qr-sheet,.qr-sheet *{visibility:visible}
+  .qr-sheet{position:absolute;left:0;top:0;width:100%;border:0}
+  .qr-sheet svg{max-width:14cm}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ OKŁADKA ============ -->
+<section id="cover" class="screen">
+  <div class="wrap">
+    <div class="cover-window" id="coverWindow"></div>
+    <h1><span class="num">9</span>pierwszych piątków</h1>
+    <p class="lede">Twoja droga przyjaźni z Panem Jezusem — miesiąc po miesiącu.</p>
+
+    <blockquote class="promise" id="promiseCover"></blockquote>
+
+    <div class="cover-form" id="coverForm">
+      <label for="nameInput">Jak masz na imię?</label>
+      <input id="nameInput" autocomplete="given-name" maxlength="30" placeholder="Wpisz swoje imię">
+      <button class="btn btn-gold" id="startBtn">Zaczynam drogę</button>
+    </div>
+    <button class="btn btn-gold hidden" id="coverBackBtn">Wracam do kontrolki</button>
+  </div>
+</section>
+
+<!-- ============ EKRAN GŁÓWNY ============ -->
+<section id="home" class="screen">
+  <div class="wrap">
+    <div id="testFlagHome" class="testflag hidden">Tryb próbny — daty nie są sprawdzane</div>
+    <div class="topbar">
+      <h2 id="hello">Cześć!</h2>
+      <button class="icon-btn" id="openSettings" aria-label="Ustawienia">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+      </button>
+    </div>
+
+    <div class="window-stage">
+      <div id="homeWindow"></div>
+      <div class="progress-text" id="progressText"></div>
+    </div>
+
+    <div id="brokenBanner" class="banner hidden">
+      <p id="brokenText"></p>
+      <button class="btn btn-plain" id="restartBtn">Zacznij nową serię</button>
+    </div>
+
+    <div id="doneCard" class="card hidden">
+      <h3>Wszystkie dziewięć!</h3>
+      <p>Witraż świeci w całości. Pan Jezus dotrzymuje obietnic — a Ty możesz dalej przychodzić do Niego w pierwsze piątki, bo przyjaźń trwa dłużej niż dziewięć miesięcy.</p>
+      <button class="btn btn-plain" id="newSeriesBtn">Zacznij kolejną serię</button>
+    </div>
+
+    <div id="nextCard" class="card">
+      <h3>Najbliższy pierwszy piątek</h3>
+      <div class="next-date" id="nextDate"></div>
+      <div class="countdown" id="countdown"></div>
+      <ul class="checks" id="checks"></ul>
+      <button class="btn btn-primary" id="scanBtn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>
+        Zeskanuj kod od księdza
+      </button>
+      <p class="hint" id="scanHint">Zaznacz wszystkie trzy, a po Mszy poproś księdza o kod.</p>
+    </div>
+
+    <div class="card">
+      <h3>Moja kontrolka</h3>
+      <ul class="log" id="log"></ul>
+    </div>
+
+    <button class="linkish" id="readPromise">Przeczytaj obietnicę Pana Jezusa</button>
+  </div>
+</section>
+
+<!-- ============ USTAWIENIA ============ -->
+<section id="settings" class="screen">
+  <div class="wrap">
+    <div class="topbar">
+      <h2>Ustawienia</h2>
+      <button class="icon-btn" data-go="home" aria-label="Wróć">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="field" style="margin-top:0">
+        <label for="nameEdit">Imię</label>
+        <input id="nameEdit" maxlength="30">
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Moje parafie</h3>
+      <p class="hint">Kod z piątku zadziała tylko z parafii, którą tu dodasz. Kod parafii pokaże Ci ksiądz lub katecheta.</p>
+      <ul class="list" id="parishList"></ul>
+      <button class="btn btn-plain" id="addParishBtn">Zeskanuj kod parafii</button>
+    </div>
+
+    <div class="card" id="installCard" hidden>
+      <h3>Zainstaluj na telefonie</h3>
+      <p class="hint">Aplikacja pojawi się na ekranie głównym i będzie działać bez internetu.</p>
+      <button class="btn btn-gold" id="installBtn">Zainstaluj</button>
+    </div>
+
+    <div class="card">
+      <div class="switch">
+        <div>
+          <h3>Tryb próbny</h3>
+          <p class="hint" style="margin-top:4px">Pozwala zeskanować kod z innego dnia, żeby przetestować aplikację.</p>
+        </div>
+        <input type="checkbox" id="testMode" aria-label="Tryb próbny">
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Dla duszpasterza</h3>
+      <p class="hint">Tworzenie kodów parafii i kodów na pierwsze piątki. Chronione kodem PIN.</p>
+      <button class="btn btn-plain" id="openPriest">Otwórz panel duszpasterza</button>
+    </div>
+
+    <button class="btn btn-danger" id="resetAll">Usuń wszystkie dane z tego telefonu</button>
+  </div>
+</section>
+
+<!-- ============ PANEL DUSZPASTERZA ============ -->
+<section id="priest" class="screen">
+  <div class="wrap">
+    <div class="topbar">
+      <h2>Panel duszpasterza</h2>
+      <button class="icon-btn" data-go="settings" aria-label="Wróć">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- konfiguracja -->
+    <div id="pSetup" class="card hidden">
+      <h3>Pierwsze uruchomienie</h3>
+      <p class="hint">Telefon wygeneruje klucz podpisu parafii. Kody podpisane tym kluczem rozpozna każde dziecko, które zeskanuje kod parafii.</p>
+      <div class="field"><label for="pName">Nazwa parafii</label><input id="pName" maxlength="60" placeholder="np. Parafia św. Józefa w Rzeszowie"></div>
+      <div class="field"><label for="pPin1">PIN (min. 4 cyfry)</label><input id="pPin1" type="password" inputmode="numeric" maxlength="12"></div>
+      <div class="field"><label for="pPin2">Powtórz PIN</label><input id="pPin2" type="password" inputmode="numeric" maxlength="12"></div>
+      <button class="btn btn-primary" id="pCreate">Utwórz klucz parafii</button>
+      <button class="linkish" id="pShowImport">Mam już klucz z innego telefonu</button>
+      <div id="pImportBox" class="hidden">
+        <div class="field"><label for="pImport">Wklej kopię klucza</label><textarea id="pImport"></textarea></div>
+        <button class="btn btn-plain" id="pImportBtn">Wczytaj klucz</button>
+      </div>
+    </div>
+
+    <!-- logowanie -->
+    <div id="pLogin" class="card hidden">
+      <h3 id="pLoginTitle">Podaj PIN</h3>
+      <div class="field"><label for="pPin">PIN</label><input id="pPin" type="password" inputmode="numeric" maxlength="12"></div>
+      <button class="btn btn-primary" id="pUnlock">Otwórz</button>
+    </div>
+
+    <!-- panel -->
+    <div id="pPanel" class="hidden">
+      <div class="card">
+        <h3 id="pParishName"></h3>
+        <p class="hint">Kod parafii dzieci skanują raz, np. na katechezie. Kod na pierwszy piątek pokaż po Mszy lub przy spowiedzi.</p>
+        <button class="btn btn-plain" id="pShowParishQR">Pokaż kod parafii</button>
+      </div>
+      <div class="card">
+        <h3>Kod na pierwszy piątek</h3>
+        <div class="field"><label for="pDate">Data</label><input id="pDate" type="date"></div>
+        <button class="btn btn-primary" id="pMakeFriday">Utwórz kod na ten piątek</button>
+      </div>
+      <div id="pQrOut"></div>
+      <div class="card">
+        <h3>Kopia klucza</h3>
+        <p class="hint">Przydaje się, gdy kody ma wydawać też drugi kapłan albo przy zmianie telefonu. Nie udostępniaj jej dzieciom ani publicznie — kto ma klucz, może tworzyć kody.</p>
+        <button class="btn btn-plain" id="pExport">Skopiuj klucz do schowka</button>
+        <button class="btn btn-danger" id="pDelete">Usuń klucz z tego telefonu</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SKANER ============ -->
+<div id="scanner" class="overlay" role="dialog" aria-modal="true" aria-label="Skaner kodu">
+  <video id="video" playsinline muted></video>
+  <canvas id="scanCanvas" hidden></canvas>
+  <div class="scan-frame"></div>
+  <div class="scan-top"><h3 id="scanTitle">Zeskanuj kod</h3><p id="scanSub">Ustaw kod w ramce</p></div>
+  <div class="scan-bottom"><button class="btn btn-plain" id="scanCancel">Anuluj</button></div>
+</div>
+
+<!-- ============ OKNO KOMUNIKATU ============ -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div id="modalArt"></div>
+    <h3 id="modalTitle"></h3>
+    <div id="modalBody"></div>
+    <div id="modalBtns"></div>
+  </div>
+</div>
+
+<script src="lib/jsQR.js"></script>
+<script src="lib/qrcode.js"></script>
+<script>
+"use strict";
+/* ================= dane ================= */
+const KEY = '9pp-state', PKEY = '9pp-priest', PFX = '9PP1';
+const COLORS = ['#C8213B','#E2A92B','#2F6FD6','#1F9E6E','#8E3BC9','#E0602A','#1A8FA8','#D2408C','#5B8F1F'];
+const PROMISE = '„Obiecuję ci w nadmiarze miłosierdzia mojego Serca, że wszechmocna miłość moja udzieli wszystkim, którzy przyjmować będą Komunię świętą w pierwsze piątki miesiąca przez dziewięć miesięcy z rzędu, łaski pokuty ostatecznej: nie umrą w mojej niełasce ani bez sakramentów świętych, a moje Boskie Serce będzie dla nich bezpieczną ucieczką w tej ostatniej chwili.”';
+const PROMISE_SRC = 'Pan Jezus do św. Małgorzaty Marii Alacoque, Paray-le-Monial (Francja), XVII wiek';
+
+function load(){
+  try{ const s = JSON.parse(localStorage.getItem(KEY)); if (s) return Object.assign(defaults(), s); }catch(e){}
+  return defaults();
+}
+function defaults(){ return {name:'', parishes:[], records:[], checks:{}, testMode:false, started:false}; }
+let S = load();
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){ alertBox('Nie udało się zapisać', 'Telefon nie pozwolił zapisać danych. Sprawdź, czy nie brakuje miejsca.'); } }
+function loadPriest(){ try{ return JSON.parse(localStorage.getItem(PKEY)); }catch(e){ return null; } }
+function savePriest(p){ localStorage.setItem(PKEY, JSON.stringify(p)); }
+
+/* ================= daty ================= */
+const pad = n => String(n).padStart(2,'0');
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const fromIso = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
+const todayIso = () => iso(new Date());
+function firstFriday(y, m){ const d = new Date(y, m, 1); return new Date(y, m, 1 + ((5 - d.getDay() + 7) % 7)); }
+function nextFirstFriday(fromS){
+  const f = fromIso(fromS); const ff = firstFriday(f.getFullYear(), f.getMonth());
+  if (iso(ff) >= fromS) return iso(ff);
+  return iso(firstFriday(f.getFullYear(), f.getMonth()+1));
+}
+function followingFirstFriday(s){ const d = fromIso(s); return iso(firstFriday(d.getFullYear(), d.getMonth()+1)); }
+function isFirstFriday(s){ if(!/^\d{4}-\d{2}-\d{2}$/.test(s)) return false; const d = fromIso(s); return d.getDay() === 5 && d.getDate() <= 7; }
+function plDate(s, withDay=true){
+  return fromIso(s).toLocaleDateString('pl-PL', withDay ? {weekday:'long', day:'numeric', month:'long', year:'numeric'} : {day:'numeric', month:'long', year:'numeric'});
+}
+function daysUntil(s){ return Math.round((fromIso(s) - fromIso(todayIso())) / 86400000); }
+function dniWord(n){ if (n === 1) return 'dzień'; return 'dni'; }
+
+function status(){
+  const recs = [...S.records].sort((a,b)=>a.date.localeCompare(b.date));
+  const count = recs.length, t = todayIso();
+  if (count >= 9) return {recs, count, done:true};
+  if (count === 0) return {recs, count, expected: nextFirstFriday(t), broken:false};
+  const expected = followingFirstFriday(recs[count-1].date);
+  if (t > expected) return {recs, count, broken:true, missed:expected, expected: nextFirstFriday(t)};
+  return {recs, count, expected, broken:false};
+}
+
+/* ================= witraż ================= */
+let svgSeq = 0;
+function windowSVG(count, justLit=-1){
+  const u = 'w' + (++svgSeq) + '_';
+  const petals = [];
+  for (let i=0;i<9;i++){
+    const lit = i < count, a = i*40;
+    const rad = (a-90)*Math.PI/180, nx = Math.cos(rad)*80, ny = Math.sin(rad)*80;
+    petals.push(`<g class="${lit?'lit':''} ${i===justLit?'just-lit':''}">
+      <g transform="rotate(${a})">
+        <path class="petal ${lit?'':'petal-glass'}" ${lit?`fill="url(#${u}g${i})"`:''} d="M0,-30 C 20,-40 24,-74 0,-92 C -24,-74 -20,-40 0,-30 Z" stroke="#0A1030" stroke-width="3.2"/>
+        ${lit?`<path d="M0,-38 C 9,-46 11,-66 0,-80" stroke="rgba(255,255,255,.45)" stroke-width="2" fill="none" stroke-linecap="round"/>`:''}
+      </g>
+      <circle cx="${nx.toFixed(1)}" cy="${ny.toFixed(1)}" r="7.5" fill="${lit?'#0A1030':'#141D46'}" stroke="${lit?'#F0C350':'#2C3770'}" stroke-width="1.4"/>
+      <text class="petal-num" x="${nx.toFixed(1)}" y="${(ny+3.2).toFixed(1)}" text-anchor="middle">${i+1}</text>
+    </g>`);
+  }
+  const grads = COLORS.map((c,i)=>`<radialGradient id="${u}g${i}" cx="50%" cy="70%" r="70%"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".35" stop-color="${c}"/><stop offset="1" stop-color="${c}" stop-opacity=".85"/></radialGradient>`).join('');
+  const heartOp = count >= 9 ? 1 : 0.18 + 0.82*(count/9);
+  return `<svg viewBox="-104 -104 208 208" role="img" aria-label="Witraż: ${count} z 9 piątków" class="${count>=9?'complete':''}">
+    <defs>${grads}
+      <radialGradient id="${u}halo"><stop offset="0" stop-color="#F0C350" stop-opacity="${count>=9?.55:.12+.25*count/9}"/><stop offset="1" stop-color="#F0C350" stop-opacity="0"/></radialGradient>
+      <linearGradient id="${u}hg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0566F"/><stop offset="1" stop-color="#B3172F"/></linearGradient>
+    </defs>
+    <circle r="103" fill="url(#${u}halo)"/>
+    <circle r="98" fill="none" stroke="#F0C350" stroke-width="2.4"/>
+    <circle r="94" fill="none" stroke="#2C3770" stroke-width="1"/>
+    ${petals.join('')}
+    <circle r="28" fill="#0A1030" stroke="#F0C350" stroke-width="2.4"/>
+    <g class="flames" ${count>=9?'':'opacity=".25"'}>
+      <path d="M0,-27 C 4,-21 5,-17 0,-12 C -5,-17 -4,-21 0,-27 Z" fill="#F0C350"/>
+      <path d="M0,-23 C 2,-19 2,-16 0,-13 C -2,-16 -2,-19 0,-23 Z" fill="#FFF3C4"/>
+    </g>
+    <path class="core-heart" fill="url(#${u}hg)" fill-opacity="${heartOp.toFixed(2)}" stroke="#F0C350" stroke-width="1.3" d="M0,18 C -22,4 -19,-12 -9,-13 C -4,-13.5 -1,-10 0,-7.5 C 1,-10 4,-13.5 9,-13 C 19,-12 22,4 0,18 Z"/>
+    <path d="M0,-6 V 10 M -5,0 H 5" stroke="#FFF3C4" stroke-width="1.6" stroke-linecap="round" opacity="${count>=9?1:.5}"/>
+  </svg>`;
+}
+
+/* ================= nawigacja ================= */
+function show(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === id));
+  window.scrollTo(0,0);
+  if (id === 'home') renderHome();
+  if (id === 'settings') renderSettings();
+  if (id === 'priest') renderPriest();
+}
+document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => show(b.dataset.go)));
+
+/* ================= okładka ================= */
+function renderCover(fromHome){
+  document.getElementById('coverWindow').innerHTML = windowSVG(fromHome ? S.records.length : 9);
+  document.getElementById('promiseCover').innerHTML = `${PROMISE}<cite>${PROMISE_SRC}</cite>`;
+  document.getElementById('coverForm').classList.toggle('hidden', !!fromHome);
+  document.getElementById('coverBackBtn').classList.toggle('hidden', !fromHome);
+  document.getElementById('nameInput').value = S.name || '';
+  show('cover');
+}
+document.getElementById('startBtn').onclick = () => {
+  const n = document.getElementById('nameInput').value.trim();
+  if (!n){ document.getElementById('nameInput').focus(); return; }
+  S.name = n; S.started = true; save();
+  show('home');
+  if (!S.parishes.length) setTimeout(() => alertBox('Dodaj swoją parafię', '<p>Na katechezie albo w kościele ksiądz pokaże <b>kod parafii</b>. Zeskanuj go raz — wtedy aplikacja rozpozna kody z pierwszych piątków.</p>', [{t:'Zeskanuj kod parafii', cls:'btn-primary', fn:()=>openScanner('parish')},{t:'Później', cls:'btn-plain'}]), 300);
+};
+document.getElementById('coverBackBtn').onclick = () => show('home');
+document.getElementById('readPromise').onclick = () => renderCover(true);
+
+/* ================= ekran główny ================= */
+function renderHome(justLit=-1){
+  document.getElementById('testFlagHome').classList.toggle('hidden', !S.testMode);
+  document.getElementById('hello').textContent = S.name ? `Cześć, ${S.name}!` : 'Cześć!';
+  const st = status();
+  document.getElementById('homeWindow').innerHTML = windowSVG(st.count, justLit);
+  document.getElementById('progressText').innerHTML = st.done ? '<b>9</b> z 9 — witraż świeci!' : `<b>${st.count}</b> z 9 piątków`;
+
+  document.getElementById('doneCard').classList.toggle('hidden', !st.done);
+  document.getElementById('nextCard').classList.toggle('hidden', !!st.done);
+  const bb = document.getElementById('brokenBanner');
+  bb.classList.toggle('hidden', !st.broken);
+  if (st.broken) document.getElementById('brokenText').innerHTML = `Brakuje piątku <b>${plDate(st.missed,false)}</b>, więc ta seria się przerwała. Nic straconego — Pan Jezus czeka. Zacznij nową serię w najbliższy pierwszy piątek.`;
+
+  if (!st.done){
+    const exp = st.expected, n = daysUntil(exp);
+    document.getElementById('nextDate').textContent = plDate(exp);
+    const cd = document.getElementById('countdown');
+    cd.textContent = n === 0 ? 'To dzisiaj!' : `za ${n} ${dniWord(n)}`;
+    cd.classList.toggle('today', n === 0);
+    if (S.checks.date !== exp) { S.checks = {date: exp, spowiedz:false, msza:false, komunia:false}; save(); }
+    const items = [
+      ['spowiedz','Spowiedź święta','Może być kilka dni wcześniej'],
+      ['msza','Msza święta','W pierwszy piątek'],
+      ['komunia','Komunia święta','Ofiaruję ją Sercu Jezusa']
+    ];
+    document.getElementById('checks').innerHTML = items.map(([k,t,s]) => `<li><button class="check" data-k="${k}" aria-pressed="${!!S.checks[k]}">
+      <span class="box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span><span class="t">${t}</span><span class="s">${s}</span></span></button></li>`).join('');
+    document.querySelectorAll('.check').forEach(b => b.onclick = () => { S.checks[b.dataset.k] = !S.checks[b.dataset.k]; save(); renderHome(); });
+    const all = S.checks.spowiedz && S.checks.msza && S.checks.komunia;
+    document.getElementById('scanBtn').disabled = !all;
+    document.getElementById('scanHint').textContent = all ? 'Wspaniale! Teraz zeskanuj kod, który pokaże ksiądz.' : 'Zaznacz wszystkie trzy, a po Mszy poproś księdza o kod.';
+  }
+
+  const log = document.getElementById('log');
+  log.innerHTML = st.recs.length ? st.recs.map((r,i) => `<li><span class="badge" style="background:${COLORS[i]}">${i+1}</span>
+    <span><span class="d">${plDate(r.date,false)}</span><span class="p">${esc(r.parishName)}${r.test?' (próbny)':''}</span></span></li>`).join('')
+    : '<li class="empty">Tu pojawią się Twoje potwierdzone piątki.</li>';
+}
+document.getElementById('openSettings').onclick = () => show('settings');
+document.getElementById('scanBtn').onclick = () => openScanner('friday');
+document.getElementById('restartBtn').onclick = () => confirmRestart();
+document.getElementById('newSeriesBtn').onclick = () => confirmRestart();
+function confirmRestart(){
+  alertBox('Nowa seria', '<p>Twoje dotychczasowe piątki zostaną wyczyszczone, a witraż zacznie się od nowa.</p>', [
+    {t:'Zacznij od nowa', cls:'btn-primary', fn:()=>{ S.records=[]; S.checks={}; save(); renderHome(); }},
+    {t:'Anuluj', cls:'btn-plain'}]);
+}
+
+/* ================= okno komunikatu ================= */
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function alertBox(title, body, btns=[{t:'Dobrze', cls:'btn-primary'}], art=''){
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = body.startsWith('<') ? body : `<p>${body}</p>`;
+  document.getElementById('modalArt').innerHTML = art;
+  const box = document.getElementById('modalBtns'); box.innerHTML = '';
+  btns.forEach(b => { const el = document.createElement('button'); el.className = 'btn ' + b.cls; el.textContent = b.t;
+    el.onclick = () => { closeModal(); b.fn && b.fn(); }; box.appendChild(el); });
+  document.getElementById('modalBg').classList.add('on');
+  setTimeout(() => box.firstChild && box.firstChild.focus(), 50);
+}
+function closeModal(){ document.getElementById('modalBg').classList.remove('on'); }
+
+/* ================= kryptografia ================= */
+const b64u = buf => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+const unb64u = s => { s = s.replace(/-/g,'+').replace(/_/g,'/'); while (s.length % 4) s += '='; return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
+const enc = s => new TextEncoder().encode(s);
+async function sha(s){ return b64u(await crypto.subtle.digest('SHA-256', enc(s))); }
+async function parishIdFromPub(pub){ return (await sha(pub)).slice(0,10); }
+const ALG = {name:'ECDSA', namedCurve:'P-256'}, SIG = {name:'ECDSA', hash:'SHA-256'};
+function cryptoOk(){
+  if (!window.crypto || !crypto.subtle){
+    alertBox('Potrzebne bezpieczne połączenie', 'Ta funkcja działa, gdy aplikacja jest otwarta z adresu https:// albo zainstalowana na telefonie.');
+    return false;
+  }
+  return true;
+}
+async function verify(pub, msg, sig){
+  try{
+    const key = await crypto.subtle.importKey('raw', unb64u(pub), ALG, false, ['verify']);
+    return await crypto.subtle.verify(SIG, key, unb64u(sig), enc(msg));
+  }catch(e){ return false; }
+}
+
+/* ================= skaner ================= */
+let stream = null, scanMode = 'friday', scanning = false;
+async function openScanner(mode){
+  scanMode = mode;
+  document.getElementById('scanTitle').textContent = mode === 'parish' ? 'Kod parafii' : 'Kod pierwszego piątku';
+  document.getElementById('scanSub').textContent = 'Ustaw kod w złotej ramce';
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    alertBox('Brak dostępu do aparatu', 'Otwórz aplikację z adresu https:// albo zainstaluj ją na telefonie — wtedy skaner zadziała.'); return;
+  }
+  try{
+    stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}, audio:false});
+  }catch(e){
+    alertBox('Aparat jest wyłączony', 'Zezwól aplikacji na używanie aparatu w ustawieniach przeglądarki lub telefonu, a potem spróbuj jeszcze raz.'); return;
+  }
+  const v = document.getElementById('video'); v.srcObject = stream; await v.play().catch(()=>{});
+  document.getElementById('scanner').classList.add('on');
+  scanning = true; requestAnimationFrame(tick);
+}
+function closeScanner(){
+  scanning = false;
+  if (stream) stream.getTracks().forEach(t => t.stop()); stream = null;
+  document.getElementById('scanner').classList.remove('on');
+}
+document.getElementById('scanCancel').onclick = closeScanner;
+function tick(){
+  if (!scanning) return;
+  const v = document.getElementById('video');
+  if (v.readyState === v.HAVE_ENOUGH_DATA){
+    const c = document.getElementById('scanCanvas'), w = v.videoWidth, h = v.videoHeight;
+    const side = Math.min(w,h), sx = (w-side)/2, sy = (h-side)/2, size = Math.min(side, 640);
+    c.width = size; c.height = size;
+    const ctx = c.getContext('2d', {willReadFrequently:true});
+    ctx.drawImage(v, sx, sy, side, side, 0, 0, size, size);
+    const code = jsQR(ctx.getImageData(0,0,size,size).data, size, size, {inversionAttempts:'dontInvert'});
+    if (code && code.data){ closeScanner(); if (navigator.vibrate) navigator.vibrate(60); handleCode(code.data.trim()); return; }
+  }
+  requestAnimationFrame(tick);
+}
+
+/* ================= obsługa kodów ================= */
+async function handleCode(txt){
+  if (!cryptoOk()) return;
+  const p = txt.split('|');
+  if (p[0] !== PFX){ alertBox('To nie jest kod pierwszych piątków', 'Ten kod QR nie pochodzi z tej aplikacji. Poproś księdza o właściwy kod.'); return; }
+  if (p[1] === 'P') return handleParish(p);
+  if (p[1] === 'F') return handleFriday(p, txt);
+  alertBox('Nieznany kod', 'Ten kod wygląda na uszkodzony. Spróbuj zeskanować go jeszcze raz.');
+}
+async function handleParish(p){
+  const [, , name, pub] = p;
+  if (!name || !pub){ alertBox('Uszkodzony kod parafii', 'Spróbuj zeskanować go jeszcze raz.'); return; }
+  try{ await crypto.subtle.importKey('raw', unb64u(pub), ALG, false, ['verify']); }
+  catch(e){ alertBox('Uszkodzony kod parafii', 'Spróbuj zeskanować go jeszcze raz.'); return; }
+  const id = await parishIdFromPub(pub);
+  if (S.parishes.some(x => x.id === id)){ alertBox('Ta parafia już jest dodana', esc(name)); return; }
+  S.parishes.push({id, name, pub}); save();
+  alertBox('Parafia dodana', `<p><b>${esc(name)}</b></p><p>Teraz aplikacja rozpozna kody z pierwszych piątków z tej parafii.</p>`);
+  if (document.getElementById('settings').classList.contains('on')) renderSettings(); else renderHome();
+}
+async function handleFriday(p){
+  const [, , pid, date, sig] = p;
+  const par = S.parishes.find(x => x.id === pid);
+  if (!par){
+    alertBox('Najpierw dodaj parafię', '<p>Ten kod jest z parafii, której jeszcze nie ma w aplikacji. Poproś księdza o <b>kod parafii</b>, zeskanuj go, a potem jeszcze raz kod z piątku.</p>',
+      [{t:'Zeskanuj kod parafii', cls:'btn-primary', fn:()=>openScanner('parish')},{t:'Anuluj', cls:'btn-plain'}]); return;
+  }
+  const ok = await verify(par.pub, `${PFX}|F|${pid}|${date}`, sig);
+  if (!ok || !isFirstFriday(date)){ alertBox('Kod nie jest prawdziwy', 'Ten kod nie został wydany przez Twoją parafię. Poproś księdza o kod.'); return; }
+  const t = todayIso();
+  if (!S.testMode && date !== t){
+    alertBox('Kod z innego dnia', `Ten kod jest ważny tylko ${plDate(date)}. Zeskanuj kod, który ksiądz pokaże w dzisiejszy pierwszy piątek.`); return;
+  }
+  if (S.records.some(r => r.date === date)){ alertBox('Ten piątek już jest zapisany', `${plDate(date,false)} masz już w kontrolce.`); return; }
+  const st = status();
+  if (st.done){ alertBox('Witraż już świeci w całości', 'Masz wszystkie dziewięć piątków. Jeśli chcesz, zacznij kolejną serię na ekranie głównym.'); return; }
+  const rec = {date, pid, parishName: par.name, at: new Date().toISOString(), test: !!S.testMode && date !== t};
+  if (st.count > 0){
+    const exp = followingFirstFriday(st.recs[st.count-1].date);
+    if (date < exp){ alertBox('Ten kod jest z wcześniejszego miesiąca', 'Zeskanuj kod z najbliższego pierwszego piątku.'); return; }
+    if (date > exp){
+      alertBox('Seria się przerwała', `<p>Brakuje piątku ${plDate(exp,false)}. Nabożeństwo to dziewięć piątków <b>z rzędu</b>, więc ten piątek może rozpocząć nową serię.</p>`,
+        [{t:'Zacznij nową serię od tego piątku', cls:'btn-primary', fn:()=>{ S.records=[rec]; save(); celebrate(0); }},{t:'Anuluj', cls:'btn-plain'}]);
+      return;
+    }
+  }
+  S.records.push(rec); save(); celebrate(S.records.length-1);
+}
+function celebrate(idx){
+  show('home'); renderHome(idx);
+  document.querySelector('.window-stage').scrollIntoView({behavior:'smooth', block:'center'});
+  const n = idx + 1;
+  const msgs = {1:'Pierwszy płatek witraża świeci! Dobry początek drogi.', 5:'Już ponad połowa! Pan Jezus cieszy się każdym Twoim przyjściem.', 8:'Jeszcze tylko jeden piątek!', 9:'Wszystkie dziewięć! Twój witraż świeci w całości. Serce Jezusa jest Twoim schronieniem.'};
+  setTimeout(() => alertBox(n === 9 ? 'Dziewiąty piątek!' : `Piątek ${n} z 9`, msgs[n] || 'Kolejny płatek witraża zaświecił. Do zobaczenia w następny pierwszy piątek!', [{t:'Amen!', cls:'btn-gold'}]), 1500);
+}
+
+/* ================= ustawienia ================= */
+let deferredInstall = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstall = e; document.getElementById('installCard').hidden = false; });
+document.getElementById('installBtn').onclick = async () => { if (!deferredInstall) return; deferredInstall.prompt(); await deferredInstall.userChoice; deferredInstall = null; document.getElementById('installCard').hidden = true; };
+function renderSettings(){
+  document.getElementById('nameEdit').value = S.name;
+  document.getElementById('testMode').checked = !!S.testMode;
+  const ul = document.getElementById('parishList');
+  ul.innerHTML = S.parishes.length ? S.parishes.map(p => `<li><span>${esc(p.name)}</span><button class="linkish" data-del="${p.id}">Usuń</button></li>`).join('')
+    : '<li class="empty">Nie dodano jeszcze żadnej parafii.</li>';
+  ul.querySelectorAll('[data-del]').forEach(b => b.onclick = () => alertBox('Usunąć parafię?', 'Kody z tej parafii przestaną być rozpoznawane. Zapisane piątki zostaną w kontrolce.', [
+    {t:'Usuń', cls:'btn-primary', fn:()=>{ S.parishes = S.parishes.filter(x => x.id !== b.dataset.del); save(); renderSettings(); }}, {t:'Anuluj', cls:'btn-plain'}]));
+}
+document.getElementById('nameEdit').oninput = e => { S.name = e.target.value.trim(); save(); };
+document.getElementById('testMode').onchange = e => { S.testMode = e.target.checked; save(); };
+document.getElementById('addParishBtn').onclick = () => openScanner('parish');
+document.getElementById('openPriest').onclick = () => { if (cryptoOk()) { priestUnlocked = false; show('priest'); } };
+document.getElementById('resetAll').onclick = () => alertBox('Usunąć wszystko?', 'Znikną imię, parafie i zapisane piątki. Klucz duszpasterza (jeśli jest) zostanie.', [
+  {t:'Usuń dane', cls:'btn-primary', fn:()=>{ S = defaults(); save(); renderCover(false); }}, {t:'Anuluj', cls:'btn-plain'}]);
+
+/* ================= panel duszpasterza ================= */
+let priestUnlocked = false;
+function renderPriest(){
+  const P = loadPriest();
+  document.getElementById('pSetup').classList.toggle('hidden', !!P);
+  document.getElementById('pLogin').classList.toggle('hidden', !P || priestUnlocked);
+  document.getElementById('pPanel').classList.toggle('hidden', !P || !priestUnlocked);
+  document.getElementById('pQrOut').innerHTML = '';
+  if (P && priestUnlocked){
+    document.getElementById('pParishName').textContent = P.name;
+    document.getElementById('pDate').value = nextFirstFriday(todayIso());
+  }
+}
+async function addOwnParish(P){
+  if (!S.parishes.some(x => x.id === P.pid)){ S.parishes.push({id:P.pid, name:P.name, pub:P.pub}); save(); }
+}
+document.getElementById('pCreate').onclick = async () => {
+  const name = document.getElementById('pName').value.trim();
+  const a = document.getElementById('pPin1').value, b = document.getElementById('pPin2').value;
+  if (!name) return alertBox('Podaj nazwę parafii', 'Dzieci zobaczą ją przy każdym zapisanym piątku.');
+  if (!/^\d{4,12}$/.test(a)) return alertBox('PIN za krótki', 'Użyj od 4 do 12 cyfr.');
+  if (a !== b) return alertBox('PIN-y się różnią', 'Wpisz ten sam PIN w obu polach.');
+  if (name.includes('|')) return alertBox('Niedozwolony znak', 'Nazwa parafii nie może zawierać znaku |.');
+  const kp = await crypto.subtle.generateKey(ALG, true, ['sign','verify']);
+  const pub = b64u(await crypto.subtle.exportKey('raw', kp.publicKey));
+  const priv = await crypto.subtle.exportKey('jwk', kp.privateKey);
+  const P = {name, pub, priv, pid: await parishIdFromPub(pub), pin: await sha('pin:'+a)};
+  savePriest(P); await addOwnParish(P); priestUnlocked = true; renderPriest();
+  alertBox('Klucz parafii gotowy', 'Pokaż dzieciom kod parafii — wystarczy, że zeskanują go raz. Zapamiętaj PIN; zrób też kopię klucza na wypadek zmiany telefonu.');
+};
+document.getElementById('pShowImport').onclick = () => document.getElementById('pImportBox').classList.toggle('hidden');
+document.getElementById('pImportBtn').onclick = async () => {
+  try{
+    const P = JSON.parse(document.getElementById('pImport').value.trim());
+    if (!P.pub || !P.priv || !P.name || !P.pin) throw 0;
+    await crypto.subtle.importKey('jwk', P.priv, ALG, false, ['sign']);
+    P.pid = await parishIdFromPub(P.pub);
+    savePriest(P); await addOwnParish(P); priestUnlocked = false; renderPriest();
+    alertBox('Klucz wczytany', 'Zaloguj się PIN-em z telefonu, z którego pochodzi kopia.');
+  }catch(e){ alertBox('Nie udało się wczytać klucza', 'Wklej całą kopię klucza dokładnie tak, jak została skopiowana.'); }
+};
+document.getElementById('pUnlock').onclick = async () => {
+  const P = loadPriest(); const pin = document.getElementById('pPin').value;
+  if (P && P.pin === await sha('pin:'+pin)){ priestUnlocked = true; document.getElementById('pPin').value=''; renderPriest(); }
+  else alertBox('Zły PIN', 'Spróbuj jeszcze raz.');
+};
+function qrSheet(text, title, lines){
+  const qr = qrcode(0, 'M'); qr.addData(text); qr.make();
+  const svg = qr.createSvgTag({cellSize:8, margin:3, scalable:true});
+  const out = document.getElementById('pQrOut');
+  out.innerHTML = `<div class="qr-sheet">${svg}<h3>${esc(title)}</h3>${lines.map(l=>`<p>${l}</p>`).join('')}</div>
+    <button class="btn btn-gold" id="pPrint">Drukuj</button>`;
+  document.getElementById('pPrint').onclick = () => window.print();
+  out.scrollIntoView({behavior:'smooth', block:'start'});
+}
+document.getElementById('pShowParishQR').onclick = () => {
+  const P = loadPriest();
+  qrSheet(`${PFX}|P|${P.name}|${P.pub}`, P.name, ['Kod parafii — zeskanuj w aplikacji', '<b>Ustawienia → Zeskanuj kod parafii</b>', 'Wystarczy raz.']);
+};
+document.getElementById('pMakeFriday').onclick = async () => {
+  const P = loadPriest(); const date = document.getElementById('pDate').value;
+  if (!isFirstFriday(date)) return alertBox('To nie jest pierwszy piątek', 'Wybierz pierwszy piątek miesiąca (dzień od 1 do 7).');
+  const msg = `${PFX}|F|${P.pid}|${date}`;
+  const key = await crypto.subtle.importKey('jwk', P.priv, ALG, false, ['sign']);
+  const sig = b64u(await crypto.subtle.sign(SIG, key, enc(msg)));
+  qrSheet(`${msg}|${sig}`, `Pierwszy piątek — ${plDate(date,false)}`, [esc(P.name), 'Zeskanuj w aplikacji po Mszy świętej.', 'Kod działa tylko w tym dniu.']);
+};
+document.getElementById('pExport').onclick = async () => {
+  const P = loadPriest(); const txt = JSON.stringify({name:P.name, pub:P.pub, priv:P.priv, pin:P.pin});
+  try{ await navigator.clipboard.writeText(txt); alertBox('Skopiowano', 'Kopia klucza jest w schowku. Wklej ją na drugim telefonie w panelu duszpasterza („Mam już klucz z innego telefonu”).'); }
+  catch(e){ alertBox('Kopia klucza', `<div class="field"><textarea readonly>${esc(txt)}</textarea></div>`); }
+};
+document.getElementById('pDelete').onclick = () => alertBox('Usunąć klucz parafii?', 'Bez kopii nie da się już tworzyć kodów rozpoznawanych przez dzieci, które dodały tę parafię.', [
+  {t:'Usuń klucz', cls:'btn-primary', fn:()=>{ localStorage.removeItem(PKEY); priestUnlocked=false; renderPriest(); }}, {t:'Anuluj', cls:'btn-plain'}]);
+
+/* ================= start ================= */
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(()=>{});
+if (S.started) show('home'); else renderCover(false);
+</script>
+</body>
+</html>
